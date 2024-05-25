@@ -42,7 +42,7 @@ class HomeView extends GetView<HomeController> {
                   ),
                   MyTheme.space(height: .02),
                   Text(
-                    UserData.userInfo.displayName!.isNotEmpty
+                    UserData.userInfo.displayName!=null
                         ? UserData.userInfo.displayName.toString()
                         : UserData.userInfo.phoneNumber!,
                     style: MyTheme.poppinsBold(color: MyTheme.white),

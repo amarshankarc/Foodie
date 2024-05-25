@@ -52,6 +52,7 @@ abstract class SignIn {
         _verificationId = verificationId;
       },
       verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
+        authState();
         Get.offAllNamed(Routes.HOME);
       },
       verificationFailed: (FirebaseAuthException error) {
