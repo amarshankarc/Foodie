@@ -60,6 +60,6 @@ To run this Flutter project, follow these steps:
 
 ## Support
 
-If you encounter any issues or have any questions regarding this project, feel free to [open an issue](https://github.com/amarshankc/Foodie/issues) on GitHub.
+If you encounter any issues or have any questions regarding this project, feel free to [open an issue](https://github.com/amarshankarc/Foodie/issues) on GitHub.
 
 ---
