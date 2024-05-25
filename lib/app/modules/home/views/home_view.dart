@@ -110,7 +110,7 @@ class HomeView extends GetView<HomeController> {
       body: Column(
         children: [
           SizedBox(
-            height: Get.height * .08,
+            height: Get.height * .055,
             width: Get.width,
             child: Obx(
               () => ListView.builder(
@@ -170,175 +170,177 @@ class HomeView extends GetView<HomeController> {
                   () => ListView.builder(
                     itemCount: controller.dishList.length,
                     itemBuilder: (context, index) {
-                      return Padding(
-                        padding: MyTheme.symmetricPadding(width: .05),
-                        child: SizedBox(
-                          height: Get.height * .25,
-                          width: Get.width,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 8,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      controller.dishList[index].dishName,
-                                      maxLines: 2,
-                                      style: MyTheme.poppinsBold(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: .020),
-                                    ),
-                                    MyTheme.space(height: .01),
-                                    Row(
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: MyTheme.symmetricPadding(width: .05),
+                            child: SizedBox(
+                              width: Get.width,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 8,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "INR ${double.parse(controller.dishList[index].dishPrice.toString()).toInt()}",
-                                          style: MyTheme.poppinsNormal(
-                                              fontSize: .018),
+                                          controller.dishList[index].dishName,
+                                          maxLines: 2,
+                                          style: MyTheme.poppinsBold(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: .020),
                                         ),
-                                        const Spacer(),
+                                        MyTheme.space(height: .01),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "INR ${double.parse(controller.dishList[index].dishPrice.toString()).toInt()}",
+                                              style: MyTheme.poppinsNormal(
+                                                  fontSize: .018),
+                                            ),
+                                            const Spacer(),
+                                            Text(
+                                              "${double.parse(controller.dishList[index].dishCalories.toString()).toInt()} Calories",
+                                              style: MyTheme.poppinsNormal(
+                                                  fontSize: .018),
+                                            )
+                                          ],
+                                        ),
+                                        MyTheme.space(height: .01),
                                         Text(
-                                          "${double.parse(controller.dishList[index].dishCalories.toString()).toInt()} Calories",
+                                          controller
+                                              .dishList[index].dishDescription,
+                                          textAlign: TextAlign.justify,
                                           style: MyTheme.poppinsNormal(
-                                              fontSize: .018),
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        MyTheme.space(height: .02),
+                                        Container(
+                                          height: Get.height * .05,
+                                          width: Get.width * .3,
+                                          decoration: BoxDecoration(
+                                              color: Colors.green,
+                                              borderRadius:
+                                                  BorderRadius.circular(30)),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              IconButton(
+                                                  onPressed: () {
+                                                    if (Cart.cartItems.any(
+                                                        (element) =>
+                                                            element.dishId ==
+                                                            controller
+                                                                .dishList[index]
+                                                                .dishId)) {
+                                                      Cart.removeQuantity(
+                                                          index: Cart.cartItems
+                                                              .indexWhere((item) =>
+                                                                  item.dishId ==
+                                                                  controller
+                                                                      .dishList[
+                                                                          index]
+                                                                      .dishId));
+                                                    } else {
+                                                      showMsg("Please add item ",
+                                                          "Quantity is zero");
+                                                    }
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.remove,
+                                                    color: MyTheme.white,
+                                                  )),
+                                              Obx(
+                                                () => Text(
+                                                  Cart.cartItems.any((element) =>
+                                                          element.dishId ==
+                                                          controller.dishList[index]
+                                                              .dishId)
+                                                      ? Cart
+                                                          .cartItems[Cart.cartItems
+                                                              .indexWhere((item) =>
+                                                                  item.dishId ==
+                                                                  controller
+                                                                      .dishList[
+                                                                          index]
+                                                                      .dishId)]
+                                                          .quantity
+                                                          .toString()
+                                                      : "0",
+                                                  style: MyTheme.poppinsNormal(
+                                                      color: MyTheme.white,
+                                                      fontSize: .020),
+                                                ),
+                                              ),
+                                              IconButton(
+                                                  onPressed: () {
+                                                    if (Cart.cartItems.contains(
+                                                        controller
+                                                            .dishList[index])) {
+                                                      Cart.addQuantity(
+                                                          index: Cart.cartItems
+                                                              .indexWhere((item) =>
+                                                                  item.dishId ==
+                                                                  controller
+                                                                      .dishList[
+                                                                          index]
+                                                                      .dishId));
+                                                    } else {
+                                                      controller.dishList[index]
+                                                          .quantity = 1;
+                                                      Cart.addProduct(
+                                                          dish: controller
+                                                              .dishList[index]);
+                                                    }
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.add,
+                                                    color: MyTheme.white,
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                        MyTheme.space(height: .01),
+                                        Obx(
+                                          () => Visibility(
+                                            visible: controller.dishList[index]
+                                                    .addonCat.isNotEmpty
+                                                ? true
+                                                : false,
+                                            child: Text(
+                                              "Customization is available",
+                                              style: MyTheme.poppinsNormal(
+                                                  color: Colors.red),
+                                            ),
+                                          ),
                                         )
                                       ],
                                     ),
-                                    MyTheme.space(height: .01),
-                                    Text(
-                                      controller
-                                          .dishList[index].dishDescription,
-                                      textAlign: TextAlign.justify,
-                                      style: MyTheme.poppinsNormal(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    MyTheme.space(height: .02),
-                                    Container(
-                                      height: Get.height * .05,
-                                      width: Get.width * .3,
-                                      decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius:
-                                              BorderRadius.circular(30)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          IconButton(
-                                              onPressed: () {
-                                                if (Cart.cartItems.any(
-                                                    (element) =>
-                                                        element.dishId ==
-                                                        controller
-                                                            .dishList[index]
-                                                            .dishId)) {
-                                                  Cart.removeQuantity(
-                                                      index: Cart.cartItems
-                                                          .indexWhere((item) =>
-                                                              item.dishId ==
-                                                              controller
-                                                                  .dishList[
-                                                                      index]
-                                                                  .dishId));
-                                                } else {
-                                                  showMsg("Please add item ",
-                                                      "Quantity is zero");
-                                                }
-                                              },
-                                              icon: Icon(
-                                                Icons.remove,
-                                                color: MyTheme.white,
-                                              )),
-                                          Obx(
-                                            () => Text(
-                                              Cart.cartItems.any((element) =>
-                                                      element.dishId ==
-                                                      controller.dishList[index]
-                                                          .dishId)
-                                                  ? Cart
-                                                      .cartItems[Cart.cartItems
-                                                          .indexWhere((item) =>
-                                                              item.dishId ==
-                                                              controller
-                                                                  .dishList[
-                                                                      index]
-                                                                  .dishId)]
-                                                      .quantity
-                                                      .toString()
-                                                  : "0",
-                                              style: MyTheme.poppinsNormal(
-                                                  color: MyTheme.white,
-                                                  fontSize: .020),
-                                            ),
-                                          ),
-                                          IconButton(
-                                              onPressed: () {
-                                                if (Cart.cartItems.contains(
-                                                    controller
-                                                        .dishList[index])) {
-                                                  Cart.addQuantity(
-                                                      index: Cart.cartItems
-                                                          .indexWhere((item) =>
-                                                              item.dishId ==
-                                                              controller
-                                                                  .dishList[
-                                                                      index]
-                                                                  .dishId));
-                                                } else {
-                                                  controller.dishList[index]
-                                                      .quantity = 1;
-                                                  Cart.addProduct(
-                                                      dish: controller
-                                                          .dishList[index]);
-                                                }
-                                              },
-                                              icon: Icon(
-                                                Icons.add,
-                                                color: MyTheme.white,
-                                              )),
-                                        ],
-                                      ),
-                                    ),
-                                    MyTheme.space(height: .01),
-                                    Obx(
-                                      () => Visibility(
-                                        visible: controller.dishList[index]
-                                                .addonCat.isNotEmpty
-                                            ? true
-                                            : false,
-                                        child: Text(
-                                          "Customization is available",
-                                          style: MyTheme.poppinsNormal(
-                                              color: Colors.red),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Padding(
+                                      padding: MyTheme.allPadding(left: .02),
+                                      child: SizedBox(
+                                        height: Get.height * .1,
+                                        width: Get.width,
+                                        child: CachedNetworkImage(
+                                          imageUrl: controller
+                                              .dishList[index].dishImage,
+                                          fit: BoxFit.fill,
                                         ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 3,
-                                child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Padding(
-                                    padding: MyTheme.allPadding(left: .02),
-                                    child: SizedBox(
-                                      height: Get.height * .1,
-                                      width: Get.width,
-                                      child: CachedNetworkImage(
-                                        imageUrl: controller
-                                            .dishList[index].dishImage,
-                                        fit: BoxFit.fill,
                                       ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
+                          const Divider()
+                        ],
                       );
                     },
                   ),

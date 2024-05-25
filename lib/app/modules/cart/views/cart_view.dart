@@ -166,11 +166,13 @@ class CartView extends GetView<CartController> {
                                         ),
                                       ),
                                     ),
+                                    const Divider()
                                   ],
                                 );
                               }),
                         ),
                       ),
+                      MyTheme.space(height: .02),
                     ],
                   ),
                 ),
@@ -181,10 +183,14 @@ class CartView extends GetView<CartController> {
               padding: MyTheme.symmetricPadding(width: .05, height: .01),
               child: InkWell(
                 onTap: () {
-                  Cart.clear();
-                  showMsg("Order successfully placed", "Order Status",
-                      isSuccess: true);
-                  Get.offNamed(Routes.HOME);
+                  if(Cart.cartItems.isNotEmpty) {
+                    Cart.clear();
+                    showMsg("Order successfully placed", "Order Status",
+                        isSuccess: true);
+                    Get.offNamed(Routes.HOME);
+                  }else{
+                    showMsg("Please Select Products", "Order Status",);
+                  }
                 },
                 child: Container(
                   height: Get.height * .07,
